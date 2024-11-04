@@ -5,12 +5,12 @@ from pathlib import Path
 
 
 import os
-import torch
+import torchaudio
 from typing import List
 
 from make_spec import SpecLoader
 from make_dataset import createDataset
-from extract_audio_features import featExtractor, trainModel
+from extract_audio_features import featExtractor, trainModel, FeatureExtractor, feature_extractor
 from make_dataset import makeLabel
 
 import time
@@ -21,7 +21,16 @@ if __name__ == "__main__":
     path : str = "C:/Users/6090249/Desktop/Learning/RustyMusic/Playlist"
     dataset, label2id, id2label = createDataset(path)
 
-
+    
+    start = time.time()
+    for path, label in dataset.items():
+        wf, sr = torchaudio.load(path)
+        # fe = FeatureExtractor(sample_rate=sr)
+        # yes = fe.make_features(wf)
+        yes = feature_extractor(sr, wf)
+    end = time.time()
+    breakpoint()
+    
     audio_in = dataset.map(featExtractor,
                            batched=True)
     label2id_train, label2id_test = makeLabel(audio_in["train"]["label"]), makeLabel(audio_in["test"]["label"])
@@ -38,12 +47,12 @@ if __name__ == "__main__":
     # print((end-start))
 
     
-    with torch.no_grad():
-        trainer = trainModel(
-            audio_in=audio_in,
-            label2id=label2id,
-            id2label=id2label
-        ).train()  ## no label 2 id function hence the error
+    # with torch.no_grad():
+    #     trainer = trainModel(
+    #         audio_in=audio_in,
+    #         label2id=label2id,
+    #         id2label=id2label
+    #     ).train()  ## no label 2 id function hence the error
     
     breakpoint()
 

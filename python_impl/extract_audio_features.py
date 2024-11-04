@@ -1,9 +1,32 @@
 from transformers import AutoFeatureExtractor, AutoModelForAudioClassification, Trainer, TrainingArguments
-
+from torchaudio.transforms import MFCC, Spectrogram
+import torch
 import numpy as np
 from typing import List
 import evaluate
 
+def feature_extractor(sample_rate,
+                     audio,
+                     n_mfcc=40):
+    mfcc_constructor = MFCC(sample_rate=sample_rate, n_mfcc=n_mfcc)
+    return mfcc_constructor(audio)
+    
+
+class FeatureExtractor:
+    def __init__(self, sample_rate, 
+                 n_mfcc=40, 
+                 n_fft=128, 
+                 hop_length=None):
+        
+        self.mfcc = MFCC(sample_rate=sample_rate, n_mfcc=n_mfcc)
+        # self.spectrogram = Spectrogram(n_fft=n_fft, hop_length=hop_length)
+
+    def make_features(self, audio):
+        mfcc = self.mfcc(audio)
+        # spec = self.spectrogram(audio)
+        # features = torch.stack([mfcc, spec], dim=1)
+        return mfcc #features
+    
 def compute_metrics(eval_pred):
     accuracy = evaluate.load("accuracy")
     predictions = np.argmax(eval_pred.predictions, axis=1)

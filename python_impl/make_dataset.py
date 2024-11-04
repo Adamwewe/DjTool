@@ -33,23 +33,20 @@ def createDataset(
                         dataset[path.replace("\\","/") + "/" + file] = dir_stack[0]
 
                 if not subdirectory:
-                        # dataset[dir_stack[0]] = tracks
-                        # tracks = []
                         dir_stack.popleft()
+
         ### update labels here to id
         label2id, id2label = makeLabel(dataset.values())
 
         for key, value in dataset.items():
-                # ids.append(label2id[value])
                 dataset[key] = label2id[value]
-
         
-        music = Dataset.from_dict({"audio" : dataset.keys(),
-                        "label" : dataset.values()})\
-                        .train_test_split(test_size=0.3)\
-                        .cast_column("audio", Audio())
+        # music = Dataset.from_dict({"audio" : dataset.keys(),
+        #                 "label" : dataset.values()})\
+        #                 .train_test_split(test_size=0.3)\
+        #                 .cast_column("audio", Audio())
         
-        return music, label2id, id2label
+        return dataset, label2id, id2label
 
 
 
