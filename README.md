@@ -1,7 +1,6 @@
-# Rusty Music
+# DJ Tool
 
-EWA LETS GOOOOO
-
+Small track classification tool I am currently building for fun. Stack is in Rust (For crawling + melspectrogram generation) and Python (for ML). The Master branch is a few commits behind and not in use for now. Please refer to the baseline branch for current efforts in progress
 ```rust
 
 mod folder_crawler;
